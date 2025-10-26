@@ -190,10 +190,15 @@ body {
     transition: var(--transition);
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     border: none;
     cursor: pointer;
     font-size: 1rem;
+}
+
+.btn svg {
+    flex-shrink: 0;
 }
 
 .btn-primary {
