@@ -22,7 +22,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            const offset = 80; // navbar height
+            const offset = 80;
             const targetPosition = target.offsetTop - offset;
             window.scrollTo({
                 top: targetPosition,
@@ -65,12 +65,20 @@ document.querySelectorAll('.section').forEach(section => {
     observer.observe(section);
 });
 
-// Observe project cards
+// Observe project cards with stagger
 document.querySelectorAll('.project-card').forEach((card, index) => {
     card.style.opacity = '0';
     card.style.transform = 'translateY(30px)';
     card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
     observer.observe(card);
+});
+
+// Observe skill categories with stagger
+document.querySelectorAll('.skill-category').forEach((category, index) => {
+    category.style.opacity = '0';
+    category.style.transform = 'translateY(30px)';
+    category.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+    observer.observe(category);
 });
 
 // Active nav link on scroll
@@ -86,16 +94,15 @@ function scrollActive() {
         const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
 
         if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+            navLinks.forEach(link => link.classList.remove('active-link'));
             navLink?.classList.add('active-link');
-        } else {
-            navLink?.classList.remove('active-link');
         }
     });
 }
 
 window.addEventListener('scroll', scrollActive);
 
-// Typing effect for hero name (optional enhancement)
+// Typing effect for hero name
 const heroName = document.querySelector('.hero-name');
 if (heroName) {
     const text = heroName.textContent;
@@ -115,21 +122,8 @@ if (heroName) {
         }
     }
     
-    // Start typing effect after a short delay
     setTimeout(typeWriter, 500);
 }
-
-// Add hover effect to buttons
-const buttons = document.querySelectorAll('.btn');
-buttons.forEach(button => {
-    button.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-2px)';
-    });
-    
-    button.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
 
 // Parallax effect for hero section
 window.addEventListener('scroll', () => {
@@ -171,44 +165,72 @@ socialLinks.forEach((link, index) => {
     }, 1500 + (index * 150));
 });
 
-// Cursor effect (optional - creates a custom cursor)
-const cursor = document.createElement('div');
-cursor.className = 'custom-cursor';
-document.body.appendChild(cursor);
+// Contact Form Handling
+const contactForm = document.getElementById('contactForm');
+const formStatus = document.getElementById('formStatus');
 
-document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-});
-
-// Add custom cursor styles
-const style = document.createElement('style');
-style.textContent = `
-    .custom-cursor {
-        width: 20px;
-        height: 20px;
-        border: 2px solid var(--primary-color);
-        border-radius: 50%;
-        position: fixed;
-        pointer-events: none;
-        z-index: 9999;
-        transition: transform 0.2s ease;
-        display: none;
-    }
-    
-    @media (min-width: 968px) {
-        .custom-cursor {
-            display: block;
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        const originalBtnText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>Sending...</span>';
+        
+        // Get form data
+        const formData = new FormData(contactForm);
+        
+        try {
+            // Using Formspree (you'll need to replace with your actual endpoint)
+            const response = await fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                formStatus.textContent = 'Thank you! Your message has been sent successfully.';
+                formStatus.className = 'form-status success';
+                contactForm.reset();
+                
+                setTimeout(() => {
+                    formStatus.style.display = 'none';
+                }, 5000);
+            } else {
+                throw new Error('Form submission failed');
+            }
+        } catch (error) {
+            formStatus.textContent = 'Oops! There was a problem sending your message. Please try again.';
+            formStatus.className = 'form-status error';
         }
-    }
+        
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    });
+}
+
+// Character count for message textarea
+const messageTextarea = document.getElementById('message');
+if (messageTextarea) {
+    const charCount = messageTextarea.nextElementSibling;
     
-    a:hover ~ .custom-cursor,
-    button:hover ~ .custom-cursor {
-        transform: scale(1.5);
-        background: rgba(99, 102, 241, 0.2);
-    }
-`;
-document.head.appendChild(style);
+    messageTextarea.addEventListener('input', () => {
+        const remaining = 500 - messageTextarea.value.length;
+        charCount.textContent = `${remaining} characters remaining`;
+        
+        if (remaining < 50) {
+            charCount.style.color = '#ef4444';
+        } else {
+            charCount.style.color = '#64748b';
+        }
+    });
+}
 
 // Add loading animation
 window.addEventListener('load', () => {
@@ -218,6 +240,79 @@ window.addEventListener('load', () => {
         document.body.style.opacity = '1';
     }, 100);
 });
+
+// Animate about section elements
+const aboutText = document.querySelector('.about-text');
+const quickFacts = document.querySelector('.quick-facts');
+
+if (aboutText) {
+    observer.observe(aboutText);
+}
+
+if (quickFacts) {
+    observer.observe(quickFacts);
+}
+
+// Animate fact items
+const factItems = document.querySelectorAll('.fact-item');
+factItems.forEach((item, index) => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(-20px)';
+    
+    const factObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 100);
+            }
+        });
+    });
+    
+    factObserver.observe(item);
+});
+
+// Animate contact detail items
+const contactDetailItems = document.querySelectorAll('.contact-detail-item');
+contactDetailItems.forEach((item, index) => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(-20px)';
+    
+    const detailObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 150);
+            }
+        });
+    });
+    
+    detailObserver.observe(item);
+});
+
+// Animate education item
+const educationItem = document.querySelector('.education-item');
+if (educationItem) {
+    educationItem.style.opacity = '0';
+    educationItem.style.transform = 'translateY(30px)';
+    
+    const eduObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                educationItem.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                educationItem.style.opacity = '1';
+                educationItem.style.transform = 'translateY(0)';
+            }
+        });
+    });
+    
+    eduObserver.observe(educationItem);
+}
 
 // Easter egg - console message
 console.log('%c👋 Hello there!', 'color: #6366f1; font-size: 24px; font-weight: bold;');
