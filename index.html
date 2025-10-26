@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Harshita Laggad - Software Engineer Portfolio" />
+  <meta name="author" content="Harshita Laggad" />
+  <title>Harshita Laggad - Software Engineer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <img src="profile.jpg" alt="Harshita Laggad" class="profile-img" />
+      <h1>HARSHITA LAGGAD</h1>
+      <p class="email">HARSHITALAGGAD203@GMAIL.COM</p>
+      <div class="sidebar-section">
+        <h3>ABOUT</h3>
+        <p>Hi, I'm Harshita. I'm a Software Engineer and MCA student passionate about building real, working applications.</p>
+        <a href="#about" class="learn-more-btn">LEARN MORE</a>
+      </div>
+
+      <div class="social-links">
+        <a href="https://github.com/harshitalaggad" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/harshita-laggad-3908aa209" target="_blank">LinkedIn</a>
+        <a href="mailto:harshitalaggad203@gmail.com">Email</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <nav class="top-nav">
+        <div class="logo">HARSHITA</div>
+        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#home" class="active" onclick="showPage('home')">ABOUT</a></li>
+          <li><a href="#resume" onclick="showPage('resume')">RESUME</a></li>
+          <li><a href="#projects" onclick="showPage('projects')">PROJECTS</a></li>
+          <li><a href="#contact" onclick="showPage('contact')">CONTACT</a></li>
+        </ul>
+      </nav>
+
+      <div class="content">
+        <div id="home-page" class="page">
+          <div class="content-card">
+            <h1 class="page-title">Hey there, I'm Harshita!</h1>
+            <p class="page-subtitle">Software Engineer | MCA Student | Coffee-powered Coder ☕</p>
+            <p class="intro-text">Welcome to my portfolio! Check out my work and projects below.</p>
+            <div class="link-line">
+              <a href="#projects" onclick="showPage('projects')">Projects</a> |
+              <a href="#resume" onclick="showPage('resume')">Resume</a>
+            </div>
+          </div>
+        </div>
+
+        <div id="resume-page" class="page hidden">
+          <div class="content-card">
+            <h1 class="page-title">RESUME</h1>
+            <p>Skills, Education, Certifications, and more...</p>
+          </div>
+        </div>
+
+        <div id="projects-page" class="page hidden">
+          <div class="content-card">
+            <h1 class="page-title">PROJECTS</h1>
+            <p>Here are some cool things I’ve built.</p>
+          </div>
+        </div>
+
+        <div id="contact-page" class="page hidden">
+          <div class="flip-container" id="flipContainer" onclick="flipCard()">
+            <div class="flip-card">
+              <div class="flip-front contact-card">
+                <h2>Click to Connect 👋</h2>
+              </div>
+              <div class="flip-back contact-card">
+                <h2>Let's Connect!</h2>
+                <p>Email: <a href="mailto:harshitalaggad203@gmail.com">harshitalaggad203@gmail.com</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
